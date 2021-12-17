@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.ur.app.mapper.URN002Mapper">
+	<select id="findDetail" resultType="com.test.ur.app.dto.URN002Dto">
+		select n.*, entire.name as entireName, category.name as categoryName  
+		from notice as n
+		join entireRegionalCode as entire
+		on
+		n.notice_entireRegionalCode = entire.code
+		join categoryCode as category
+		on
+		n.notice_category = category.code
+		where notice_registerNo=#{notice_registerNo}
+	</select>
+	
+	<select id="findAll" resultType="com.test.ur.app.dto.URN002Dto">
+		select * from notice
+		limit #{startnum}, 10
+	</select>
+	
+	<select id="getTotal" resultType="int">
+		select count(*) from notice
+	</select>
+	
+	<select id="codeAList" resultType="com.test.ur.app.dto.CodeDto">
+		select * from ENTIREREGIONALCODE
+	</select>
+	
+	<select id="codeCList" resultType="com.test.ur.app.dto.CodeDto">
+		select * from CATEGORYCODE
+	</select>
+	
+	<insert id="createNotice">
+	insert into notice (
+		notice_registerNo,
+		notice_category,
+		notice_entireRegionalCode,
+		notice_title,
+		notice_content,
+		notice_link,
+		notice_displyDate,
+		notice_writeDate,
+		notice_reWriteDate
+		)
+	values(
+		next value for notice_seq,
+		#{notice_category},
+		#{notice_entireRegionalCode},
+		#{notice_title},
+		#{notice_content},
+		#{notice_link},
+		#{notice_displyDate},
+		current_timestamp,
+		current_timestamp
+		)
+	</insert>
+	<select id="getNotice" resultType="com.test.ur.app.dto.URN002Dto">
+		select * from notice where notice_registerNo = #{notice_registerNo}
+	</select>
+	<update id="updateNotice">
+		update notice
+			<set>
+				notice_category = #{notice_category},
+				notice_entireRegionalCode = #{notice_entireRegionalCode},
+				notice_title = #{notice_title},
+				notice_content = #{notice_content},
+				notice_link = #{notice_link},
+				<if test="notice_displyDate != null">notice_displyDate = #{notice_displyDate},</if>
+				notice_reWriteDate = current_timestamp
+			</set>
+			<where>
+				notice_registerNo = #{notice_registerNo}
+			</where>
+	</update>
+</mapper>
+
+<!-- 여기서 mybatis 작성하면, dao mapper service serviceImpl 수정하고 controller의 service까지 -->

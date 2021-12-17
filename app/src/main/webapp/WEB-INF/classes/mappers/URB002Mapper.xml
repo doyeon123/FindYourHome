@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.ur.app.mapper.URB002Mapper">
+
+	<select id="buildList" resultType="com.test.ur.app.dto.URB002Dto">
+		select z.*, e.name as e_name, a.name as a_name, s.name as s_name from zoneInfo as z
+			join entireRegionalCode as e
+			on z.zone_entireRegionalCode = e.code
+			join areaRegionalCode as a
+			on z.zone_areaRegionalCode = a.code
+			join stateRegionalCode as s
+			on z.zone_stateRegionalCode = s.code
+			
+			<where>
+	 			<if test ="search_codeA != null and search_codeA != ''">z.zone_entireRegionalCode = #{search_codeA}</if>
+		 		<if test="search_codeB != null and search_codeB != ''">and z.zone_areaRegionalCode = #{search_codeB}</if>
+		 		<if test="search_codeC != null and search_codeC != ''">and z.zone_stateRegionalCode = #{search_codeC}</if>
+	 			<if test="search_name != null and search_name != ''"><bind name="asd" value="'%'+search_name+'%'"/>and z.zone_officalName like #{asd} </if>
+	 		</where>
+		order by zone_registerNo desc
+		limit #{startnum}, 10
+    </select>
+    
+    <select id="getTotal" resultType="int">
+		select count(*) from zoneInfo
+	</select>
+    
+    <select id="codeAList" resultType="com.test.ur.app.dto.CodeDto">
+		SELECT * FROM ENTIREREGIONALCODE
+    </select>
+    
+    <select id="codeEList" resultType="com.test.ur.app.dto.CodeDto">
+    	SELECT * FROM equipmentCode
+    </select>
+    
+    <select id="codeBList" parameterType="String" resultType="com.test.ur.app.dto.CodeDto">
+	 	SELECT * FROM areaRegionalCode WHERE code1 = #{codeA}
+ 	</select>
+    <select id="codeBListAll" parameterType="String" resultType="com.test.ur.app.dto.CodeDto">
+	 	SELECT * FROM areaRegionalCode
+ 	</select>
+ 	
+ 	<select id="codeCList" parameterType="String" resultType="com.test.ur.app.dto.CodeDto">
+	 	SELECT * FROM stateRegionalCode WHERE code1 = #{codeA} and code2 = #{codeB}
+ 	</select>
+ 	<select id="codeCListAll" parameterType="String" resultType="com.test.ur.app.dto.CodeDto">
+	 	SELECT * FROM stateRegionalCode
+ 	</select>
+ 	
+ 	<insert id="Register">
+ 		INSERT INTO zoneInfo(
+	 		zone_registerNo,
+			zone_entireRegionalCode,
+			zone_areaRegionalCode,
+			zone_stateRegionalCode,
+			zone_officalName,
+			zone_maintenaceCost,
+			zone_maintenaceCostFlag,
+			zone_postalCode,
+			zone_address,
+			zone_layout,
+			zone_houseHoldsNo,
+			zone_trafficInfo,
+			zone_trafficInfoLink,
+			zone_buildingStructure,
+			zone_managementYear,
+			zone_parkingLotInfo,
+			zone_characteristic,
+			zone_note,
+			zone_buildingImg,
+			zone_locationImg,
+			zone_regionalImg,
+			zone_surroundingImg
+ 		) VALUES (
+ 			NEXT VALUE FOR zone_seq,
+			#{zone_entireRegionalCode},
+			#{zone_areaRegionalCode},
+			#{zone_stateRegionalCode},
+			#{zone_officalName},
+			#{zone_maintenaceCost},
+			#{zone_maintenaceCostFlag},
+			#{zone_postalCode},
+			#{zone_address},
+			#{zone_layout},
+			#{zone_houseHoldsNo},
+			#{zone_trafficInfo},
+			#{zone_trafficInfoLink},
+			#{zone_buildingStructure},
+			#{zone_managementYear},
+			#{zone_parkingLotInfo},
+			#{zone_characteristic},
+			#{zone_note},
+			#{zone_buildingImg},
+			#{zone_locationImg},
+			#{zone_regionalImg},
+			#{zone_surroundingImg}
+ 		)
+ 		
+ 		
+ 	</insert>
+ 	
+ 	<select id="detail" resultType="com.test.ur.app.dto.URB002Dto">
+ 		select z.*, e.name as e_name, a.name as a_name, s.name as s_name from zoneInfo as z
+			join entireRegionalCode as e
+			on z.zone_entireRegionalCode = e.code
+			join areaRegionalCode as a
+			on z.zone_areaRegionalCode = a.code
+			join stateRegionalCode as s
+			on z.zone_stateRegionalCode = s.code
+ 		WHERE zone_registerNo = #{zone_registerNo}
+ 	</select>
+ 	
+ 	<update id="Update" parameterType="com.test.ur.app.dto.URB002Dto">
+ 		UPDATE zoneInfo
+		<set>
+			zone_entireRegionalCode = #{zone_entireRegionalCode},
+			zone_areaRegionalCode = #{zone_areaRegionalCode},
+			zone_stateRegionalCode = #{zone_stateRegionalCode},
+			zone_officalName = #{zone_officalName},
+			zone_maintenaceCost = #{zone_maintenaceCost},
+			zone_maintenaceCostFlag = #{zone_maintenaceCostFlag},
+			zone_postalCode = #{zone_postalCode},
+			zone_address = #{zone_address},
+			<if test="zone_layout != ''">zone_layout = #{zone_layout},</if>
+			zone_houseHoldsNo = #{zone_houseHoldsNo},
+			zone_trafficInfo = #{zone_trafficInfo},
+			zone_trafficInfoLink = #{zone_trafficInfoLink},
+			zone_buildingStructure = #{zone_buildingStructure},
+			zone_managementYear = #{zone_managementYear},
+			zone_parkingLotInfo = #{zone_parkingLotInfo},
+			zone_characteristic = #{zone_characteristic},
+			zone_note = #{zone_note},
+			<if test="zone_buildingImg != ''">zone_buildingImg = #{zone_buildingImg},</if>
+			<if test="zone_locationImg != ''">zone_locationImg = #{zone_locationImg},</if>
+			<if test="zone_regionalImg != ''">zone_regionalImg = #{zone_regionalImg},</if>
+			<if test="zone_surroundingImg != ''">zone_surroundingImg = #{zone_surroundingImg},</if>
+		</set>
+		<where>
+			zone_registerNo = #{zone_registerNo}
+		</where>
+ 	</update>
+</mapper>

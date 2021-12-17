@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.ur.app.mapper.URU002Mapper">
+	<select id="findAll" resultType="com.test.ur.app.dto.URU002Dto">
+		SELECT app.*, z.zone_officalName as z_name FROM applicant as app
+			join zoneInfo as z
+			on app.applicant_buildingInfo = z.zone_registerNo
+			
+			
+			
+				
+
+	</select>
+
+	<select id="kokuseki" resultType="com.test.ur.app.dto.CodeDto">
+
+		SELECT * FROM nationalityCode
+
+
+	</select>
+	
+	<select id="getReceipt" resultType="com.test.ur.app.dto.URU002Dto">
+
+		select * from applicant where applicant_applyNo = #{applicant_applyNo}
+		
+		</select>
+
+
+	<!-- 넣기 -->
+	<insert id="insertapplicant"
+		parameterType="com.test.ur.app.dto.URU002Dto">
+
+		INSERT INTO applicant (
+		applicant_applyNo,
+		applicant_buildingInfo,
+		applicant_nameKanji,
+		applicant_nameFurigana,
+		applicant_birth,
+		applicant_gender,
+		applicant_nationality,
+		applicant_regidentsCardFlag,
+		applicant_movingIn,
+		applicant_regidentsEligible,
+		applicant_regidentsDuration,
+		applicant_regidentsEndDate,
+		applicant_telNum,
+		applicant_postalCode,
+		applicant_address,
+		applicant_addressDetail,
+		applicant_workName,
+		applicant_workAddress,
+		applicant_incomeCertfication,
+		applicant_incomeYear
+		)
+
+		VALUES (
+		next value for applicant_seq,
+		#{applicant_buildingInfo},
+		#{applicant_nameKanji},
+		#{applicant_nameFurigana},
+		#{applicant_birth},
+		#{applicant_gender},
+		#{applicant_nationality},
+		#{applicant_regidentsCardFlag},
+		#{applicant_movingIn},
+		#{applicant_regidentsEligible},
+		#{applicant_regidentsDuration},
+		#{applicant_regidentsEndDate},
+		#{applicant_telNum},
+		#{applicant_postalCode},
+		#{applicant_address},
+		#{applicant_addressDetail},
+		#{applicant_workName},
+		#{applicant_workAddress},
+		#{applicant_incomeCertfication},
+		#{applicant_incomeYear}
+		)
+	</insert>
+
+	<select id="readInDetails" parameterType="int" resultType="com.test.ur.app.dto.URU002Dto">
+		select * from applicant where applicant_applyNo = #{applicant_applyNo}
+		</select>
+		
+	<update id="updateReceipt" parameterType="com.test.ur.app.dto.URU002Dto">
+	
+	update applicant
+		<set>
+			
+			applicant_buildingInfo = #{applicant_buildingInfo},
+			applicant_nameKanji = #{applicant_nameKanji},
+			applicant_nameFurigana = #{applicant_nameFurigana},
+			applicant_birth = #{applicant_birth},
+			applicant_gender = #{applicant_gender},
+			applicant_nationality = #{applicant_nationality},
+			applicant_regidentsCardFlag = #{applicant_regidentsCardFlag},
+			applicant_movingIn = #{applicant_movingIn},
+			applicant_regidentsEligible = #{applicant_regidentsEligible},
+			applicant_regidentsDuration = #{applicant_regidentsDuration},
+			applicant_regidentsEndDate = #{applicant_regidentsEndDate},
+			applicant_telNum = #{applicant_telNum},
+			applicant_postalCode = #{applicant_postalCode},
+			applicant_address = #{applicant_address},
+			applicant_addressDetail = #{applicant_addressDetail},
+			applicant_workName = #{applicant_workName},
+			applicant_workAddress = #{applicant_workAddress},
+			applicant_incomeCertfication = #{applicant_incomeCertfication},
+			applicant_incomeYear = #{applicant_incomeYear}
+			
+			
+		
+		</set>
+		<where>
+		
+			applicant_applyNo = #{applicant_applyNo}
+		
+		</where>
+	
+	
+	
+	</update>
+
+	<select id="buildSearch" resultType="com.test.ur.app.dto.URB002Dto">
+		select z.*, e.name as e_name, a.name as a_name, s.name as s_name from zoneInfo as z
+			join entireRegionalCode as e
+			on z.zone_entireRegionalCode = e.code
+			join areaRegionalCode as a
+			on z.zone_areaRegionalCode = a.code
+			join stateRegionalCode as s
+			on z.zone_stateRegionalCode = s.code
+ 		<where>
+ 			<if test ="zone_entireRegionalCode != ''">z.zone_entireRegionalCode = #{zone_entireRegionalCode}</if>
+	 		<if test="zone_areaRegionalCode != ''">and z.zone_areaRegionalCode = #{zone_areaRegionalCode}</if>
+	 		<if test="zone_stateRegionalCode != ''">and z.zone_stateRegionalCode = #{zone_stateRegionalCode}</if>
+	 		<bind name="asd" value="'%'+zone_officalName+'%'"/>
+ 			<if test="zone_officalName != ''">and z.zone_officalName like #{asd} </if>
+	 	</where>
+ 		<!-- order by zone_registerNo desc -->
+	</select>
+
+
+</mapper>

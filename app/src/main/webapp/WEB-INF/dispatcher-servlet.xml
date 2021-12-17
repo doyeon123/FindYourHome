@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans" 
+			xmlns="http://www.springframework.org/schema/mvc" 
+			xmlns:context="http://www.springframework.org/schema/context" 
+			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+			xmlns:mvc="http://www.springframework.org/schema/mvc"
+			xmlns:p="http://www.springframework.org/schema/p" 
+			xsi:schemaLocation="http://www.springframework.org/schema/beans 
+			http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+			http://www.springframework.org/schema/mvc 
+			http://www.springframework.org/schema/mvc/spring-mvc.xsd 
+			http://www.springframework.org/schema/context 
+			http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+			
+
+	<context:component-scan base-package="com.test.ur.app" /> 
+	<!-- Enables the Spring MVC @Controller programming model --> 
+	<annotation-driven />
+	
+	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- Max size: 50MB --> 
+		<beans:property name="defaultEncoding" value="UTF-8" />
+		<beans:property name="maxUploadSize" value="10240000000"/>
+	</beans:bean> 
+	
+	<beans:bean class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+		<beans:property name="viewClass" value="org.springframework.web.servlet.view.tiles3.TilesView" />
+		<beans:property name="order" value="1" />
+	</beans:bean>
+	
+	<beans:bean class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+		<beans:property name="definitions">
+			<beans:list>
+				<beans:value>/WEB-INF/tiles/tiles-config.xml</beans:value>
+			</beans:list>
+		</beans:property>
+	</beans:bean>
+
+	<beans:bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">  
+		<beans:property name="prefix" value="/WEB-INF/views/" /> 
+		<beans:property name="suffix" value=".jsp" />
+		<beans:property name="order" value="2" />		 
+	</beans:bean>
+	
+	<beans:bean id="uploadPath" class="java.lang.String">
+		<beans:constructor-arg value="C:\images"></beans:constructor-arg>
+	</beans:bean>
+	<mvc:resources mapping="/resources/**" location="/resources/" />
+	
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/" />
+	        <mvc:mapping path="/area/**" />
+	        <mvc:mapping path="/notice/**" />
+	        <mvc:mapping path="/office/**" />
+			<beans:bean class="com.test.ur.app.interceptor.MenuInterceptor"/>
+		</mvc:interceptor>
+	</mvc:interceptors>
+	
+</beans:beans>

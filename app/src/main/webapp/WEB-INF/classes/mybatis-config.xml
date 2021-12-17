@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0/EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <typeAliases>
+        <typeAlias alias="GoodsDto" type="com.test.ur.app.dto.GoodsDto"/>
+        <typeAlias alias="URR001Dto" type="com.test.ur.app.dto.URR001Dto"/>
+        <typeAlias alias="URO002Dto" type="com.test.ur.app.dto.URO002Dto"/>
+        <typeAlias alias="URO001Dto" type="com.test.ur.app.dto.URO001Dto"/>
+        <typeAlias alias="codeDto" type="com.test.ur.app.dto.CodeDto"/>
+        <typeAlias alias="ljk_URC001Dto" type="com.test.ur.app.dto.ljk_URC001Dto"/>
+    </typeAliases>
+</configuration>

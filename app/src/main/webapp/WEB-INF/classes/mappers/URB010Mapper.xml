@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.ur.app.mapper.URB010Mapper">
+	
+	<select id="findDetail" resultType="com.test.ur.app.dto.URB010Dto">
+		select * from community
+        where community_registerNo = #{community_registerNo}
+	</select>
+	
+	<select id="findAll" resultType="com.test.ur.app.dto.URB010Dto">
+		select * from community
+		limit #{startnum}, 10
+	</select>
+	
+	<!-- buildNo로 커뮤니티 리스트 가져오기 -->
+    <select id="findAllByBuildNo" resultType="com.test.ur.app.dto.URB010Dto">
+		select * from community as a
+		join zoneInfo as b
+		on a.community_buildingInfo = b.zone_registerNo
+		where community_buildingInfo = #{buildNo}
+	</select>
+	
+	
+	
+	<select id="getTotal" resultType="int">
+		select count(*) from community
+	</select>
+	
+	<select id="codeAList" resultType="com.test.ur.app.dto.CodeDto">
+		select * from ENTIREREGIONALCODE
+	</select>
+	
+	<select id="codeCList" resultType="com.test.ur.app.dto.CodeDto">
+		select * from CATEGORYCODE
+	</select>
+	
+	
+	<insert id="createCommunity">
+	insert into community (
+		community_registerNo,
+		community_buildingInfo,
+		community_author,
+		community_password,
+		community_title,
+		community_content,
+		community_deleteFlag,
+		community_writeDate,
+		community_reWriteDate
+		)
+	values(
+		next value for community_seq,
+		#{community_buildingInfo},
+		#{community_author},
+		#{community_password},
+		#{community_title},
+		#{community_content},
+		'Y',
+		current_timestamp,
+		current_timestamp
+		)
+	</insert>
+	
+	<update id="updateCommunity">
+		update community
+		    <set>
+				community_buildingInfo = #{community_buildingInfo},
+				community_author = #{community_author},
+				community_password = #{community_password},
+				community_title = #{community_title},
+				community_content = #{community_content},
+				community_deleteFlag = #{community_deleteFlag},
+				community_reWriteDate = current_timestamp
+			</set>
+			<where>
+				community_registerNo = #{community_registerNo}
+			</where>	
+	</update>	
+	
+	
+	<update id="removeCommunity">
+		update community
+		    <set>
+				community_deleteFlag = 'N'				
+			</set>
+			<where>
+				community_registerNo = #{community_registerNo}
+			</where>	
+	</update>
+	
+	
+	<insert id="createReply">
+	insert into reply (
+		reply_registerNo,
+		reply_communityRegisterNo,
+		reply_author,
+		reply_password,
+		reply_content,
+		reply_deleteFlag,
+		reply_writeDate,
+		reply_reWriteDate
+		)
+	values(
+		next value for reply_seq,
+		#{reply_communityRegisterNo},
+		#{reply_author},
+		#{reply_password},
+		#{reply_content},
+		'Y',
+		current_timestamp,
+		current_timestamp
+		)
+	</insert>
+	
+</mapper>
+
+<!-- 여기서 mybatis 작성하면, dao mapper service serviceImpl 수정하고 controller의 service까지 -->

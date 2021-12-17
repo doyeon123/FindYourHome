@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.ur.app.mapper.ljk_URC001Mapper">
+
+	<select id="getTotal" resultType="int">
+	select count(*) from consulting
+		where 1=1
+	</select>
+
+
+
+	<insert id="insertBoard">
+		
+		insert into consulting (
+			consulting_registerNo, 
+			consulting_author, 
+			consulting_password, 
+			consulting_title, 
+			consulting_content, 
+			consulting_deleteFlag, 
+			consulting_writeDate, 
+			consulting_reWriteDate 
+			)
+		values(
+			next value for consulting_seq, 
+			#{consulting_author}, 
+			#{consulting_password}, 
+			#{consulting_title}, 
+			#{consulting_content},
+			1, 
+			current_timestamp,
+			current_timestamp
+			)
+	</insert>
+	
+	<select id="get" resultType="com.test.ur.app.dto.ljk_URC001Dto">
+		select * from consulting where consulting_registerNo=#{consulting_registerno}
+	</select>
+	
+	<update id="update">
+		update consulting
+		set 
+		consulting_author=#{consulting_author}, 
+		consulting_password=#{consulting_password}, 
+		consulting_title=#{consulting_title}, 
+		consulting_content=#{consulting_content},
+		consulting_reWriteDate=current_timestamp
+		where 
+		consulting_registerNo=#{consulting_registerno}
+	
+	</update>
+
+	<!-- 리스트 목록 조회 -->
+	<select id="getList" resultType="com.test.ur.app.dto.ljk_URC001Dto">
+ 		select * from consulting
+ 		order by consulting_registerNo desc 	
+		limit #{startnum}, 10
+	</select>
+
+	<update id="remove">
+		update consulting 
+		set 
+		consulting_deleteFlag = 0 
+		where 
+		consulting_registerNo=#{consulting_registerno}
+	</update>
+	
+	
+	<select id="checkpassword" resultType="com.test.ur.app.dto.ljk_URC001Dto">
+	
+		select * from consulting where 
+		consulting_registerNo=#{consulting_registerno}
+		and
+		consulting_password=#{consulting_password}
+	
+	
+	</select>
+
+<!-- 
+
+123123213212312321321
+
+-->
+
+	
+
+	<delete id="delete" parameterType="int">
+		delete from consulting 
+		where 
+		consulting_registerNo=#{consulting_registerNo}
+	</delete>
+	
+	
+
+
+</mapper>
+
+<!-- 여기서 mybatis 작성하면, dao mapper service serviceImpl 수정하고 controller의 service까지 -->

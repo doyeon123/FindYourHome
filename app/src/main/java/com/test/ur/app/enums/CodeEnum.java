@@ -1,0 +1,14 @@
+package com.test.ur.app.enums;
+
+public enum CodeEnum {
+	ENTIRE_REGIONAL,
+	AREA_REGIONAL,
+	STATE_REGIONAL,
+	PROGRESS,
+	ROOM,
+	INTERNET,
+	BUSINESS,
+	CATEGORY,
+	NATIONALITY,
+	EQUIPMENT
+}

@@ -1,0 +1,12 @@
+eclipse.preferences.version=1
+encoding//src/main/java/com/test/ur/app/Util=UTF-8
+encoding//src/main/java/com/test/ur/app/controller=MS949
+encoding//src/main/java/com/test/ur/app/controller/URB002Controller.java=UTF-8
+encoding//src/main/java/com/test/ur/app/controller/URO001Controller.java=MS949
+encoding//src/main/java/com/test/ur/app/controller/URO002Controller.java=MS949
+encoding//src/main/java/com/test/ur/app/controller/base/BaseController.java=UTF-8
+encoding//src/main/java/com/test/ur/app/services/URO002Service.java=UTF-8
+encoding//src/main/java/com/test/ur/app/servicesImp=MS949
+encoding//src/main/webapp/WEB-INF/views/contents=UTF-8
+encoding/<project>=MS949
+separateDerivedEncodings=true

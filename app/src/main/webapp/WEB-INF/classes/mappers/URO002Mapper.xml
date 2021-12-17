@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.ur.app.mapper.URO002Mapper">
+	
+	<!-- 영업소 전체 리스트 가져오기 -->
+	<select id="getSalesList" resultType="com.test.ur.app.dto.URO002Dto">
+		select * from salesOffice order by sales_registerNo
+	</select>
+	
+	
+	<!--  db 넣기 -->
+	<insert id="insertOffice" parameterType="com.test.ur.app.dto.URO002Dto">
+		insert into salesOffice (
+			sales_registerNo
+			, sales_businessCode
+			, sales_areaCode
+			, sales_officeName
+			, sales_telNum
+			, sales_postalCode
+			, sales_address
+			, sales_officeHours
+			, sales_holiday
+			, sales_transportation
+			, sales_reference
+			, sales_img
+		)
+		values (
+			NEXT VALUE FOR sales_seq
+			, #{sales_businessCode}
+			, #{sales_areaCode}
+			, #{sales_officeName}
+			, #{sales_telNum}
+			, #{sales_postalCode}
+			, #{sales_address}
+			, #{sales_officeHours}
+			, #{sales_holiday}
+			, #{sales_transportation}
+			, #{sales_reference}
+			, #{sales_img}
+		)
+	</insert>
+
+	<!-- 오피스 수정하기 -->
+	<update id="updateOffice" parameterType="com.test.ur.app.dto.URO002Dto">
+		update salesOffice
+		<set>
+			sales_businessCode = #{sales_businessCode}
+			,sales_areaCode = #{sales_areaCode}
+			,sales_officeName = #{sales_officeName}
+			,sales_telNum = #{sales_telNum}
+			,sales_postalCode = #{sales_postalCode}
+			,sales_address = #{sales_address}
+			,sales_officeHours = #{sales_officeHours}
+			,sales_holiday = #{sales_holiday}
+			,sales_transportation = #{sales_transportation}
+			,<if test="sales_img != ''">sales_img = #{sales_img}</if>
+		</set>
+		where
+			sales_registerNo = #{sales_registerNo}
+	</update>
+	
+	<!-- 오피스 상세보기 -->
+	<select id="readOfficeDetails" parameterType="int" resultType="com.test.ur.app.dto.URO002Dto">
+		select so.*, s.name as s_name, e.name as e_name, a.name as a_name, s.code as zone_stateRegionalCod, a.code as zone_areaRegionalCode, e.code as zone_entireRegionalCode from salesOffice as so
+		join stateRegionalCode as s
+		on so.sales_areacode = s.code
+		join areaRegionalCode as a
+		on s.code2=a.code
+		join entireRegionalCode as e
+		on a.code1=e.code
+		where so.sales_registerNo = #{sales_registerNo}
+	</select>
+	
+	<!-- 검색 -->
+	<select id="search" resultType="com.test.ur.app.dto.URO002Dto">
+		<choose>
+	 		<when test ="#{zone_entireRegionalCode} != null or #{zone_entireRegionalCode} != ''">
+			 		select so.*, e.name as e_name, a.name as a_name, s.name as s_name, s.code as zone_stateRegionalCod, a.code as zone_areaRegionalCode, e.code as zone_entireRegionalCode from salesOffice as so
+					join stateRegionalCode as s
+					on so.sales_areacode = s.code
+					join areaRegionalCode as a
+					on s.code2=a.code
+					join entireRegionalCode as e
+					on a.code1=e.code
+				<bind name="asd" value="'%'+search_name+'%'"/>
+				<where>				
+	 				<if test ="zone_entireRegionalCode != null and zone_entireRegionalCode != ''">e.code = #{zone_entireRegionalCode}</if>
+		 			<if test="zone_areaRegionalCode != null and zone_areaRegionalCode != ''">and a.code = #{zone_areaRegionalCode}</if>
+		 			<if test="zone_stateRegionalCode != null and zone_stateRegionalCode != ''">and s.code = #{zone_stateRegionalCode}</if>
+	 				<if test="search_name != null and search_name != ''">and so.sales_officeName like #{asd} </if>
+	 			</where>
+				order by sales_registerNo desc
+				limit #{startnum}, 10
+			</when>
+			<otherwise>
+				select * from salesOffice
+				<bind name="asd" value="'%'+search_name+'%'"/>
+				<where>
+					<if test="search_name != null or search_name != ''">so.sales_officeName like #{asd} </if>
+				</where>
+				order by sales_registerNo desc
+				limit #{startnum}, 10
+			</otherwise>
+		</choose>
+ 	</select>
+ 	
+ 	
+ 	<select id="getTotal" resultType="int">
+		select count(*) from salesOffice
+	</select>
+    
+ 	
+ 	<select id="officeList" resultType="com.test.ur.app.dto.URO002Dto">
+		select * from salesOffice order by sales_registerNo
+		limit #{startnum}, 10
+    </select>
+
+</mapper>

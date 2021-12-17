@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.ur.app.mapper.CodeListMapper">
+
+
+	<!-- 데이터 취득 -->
+	<select id="findAllEntireRegionalCode" resultType="codeDto">
+		SELECT * FROM ENTIREREGIONALCODE 
+    </select>
+    
+    <select id="findAllAreaRegionalCode" resultType="codeDto">
+		SELECT * FROM AREAREGIONALCODE 
+    </select>
+    
+	<select id="findAllProgressCode" resultType="codeDto">
+		SELECT * FROM PROGRESSCODE 
+    </select>
+    
+    <select id="findAllNationalitycode" resultType="codeDto">
+		SELECT * FROM NATIONALITYCODE 
+    </select>
+    
+    <select id="findAllOfficeCode" resultType="codeDto">
+		SELECT * FROM BUSINESSCODE
+    </select>
+    
+    <select id="findAllCategoryCode" resultType="codeDto">
+		SELECT * FROM CATEGORYCODE 
+    </select>
+    
+    <select id="findAllInternetCode" resultType="codeDto">
+		SELECT * FROM INTERNETCODE 
+    </select>
+    
+    <select id="findAllRoomCode" resultType="codeDto">
+		SELECT * FROM ROOMCODE 
+    </select>
+    
+    <select id="findAllBusinessCode" resultType="codeDto">
+		SELECT * FROM BUSINESSCODE
+    </select>
+    
+    <select id="findAllEquipmentCode" resultType="codeDto">
+		SELECT * FROM EQUIPMENTCODE
+    </select>
+    
+    <select id="getCityListByRegional" resultType="codeDto">
+		SELECT * FROM STATEREGIONALCODE WHERE CODE2 = #{regionalcode}
+    </select>
+    
+    <select id="getRegionalListByArea" resultType="codeDto">
+		SELECT * FROM AREAREGIONALCODE WHERE CODE1 = #{areacode}
+    </select>
+    
+    <select id="getPrefectureListByRegional" resultType="codeDto">
+		SELECT STATE.* FROM stateRegionalCode STATE
+		JOIN areaRegionalCode AS AREA 
+		ON STATE.CODE2 = AREA.CODE
+		WHERE STATE.CODE2 = #{prefecturecode}
+    </select>
+    
+    <!-- 검색조건 -->
+    <select id="getStructureList" parameterType="hashmap" resultType="com.test.ur.app.dto.URA001Dto">
+    	<!-- zoneInfo_registerNo + roomInfo_zonInfo join [Pk] -->
+    	SELECT ROOM.*, ZONE.zone_note AS zone_note, ZONE.zone_registerNo, RC.name AS roomName,
+    	RECODE.name AS areaName
+    	FROM ROOMINFO AS ROOM
+    	
+    	JOIN ZONEINFO AS ZONE
+    	ON 
+    	ROOM.room_zoneInfo = ZONE.zone_registerNo  <!-- 건물정보(구역정보) - 구역정보(등록번호) 조인  -->
+    	
+    	JOIN ROOMCODE AS RC
+    	ON
+    	ROOM.room_structure = RC.code
+    	
+    	JOIN areaRegionalCode AS RECODE
+    	ON
+    	ZONE.zone_areaRegionalCode = RECODE.code
+    	
+    	<!--collection: 전달받은 인자값  / item: 전달받은 인자값을 재정의 (foreach구문에서 사용할 변수명  -->
+    	<where>
+    		<foreach collection="structureList" item="structure" separator="or" >
+    			ROOM.room_structure = #{structure}
+    		</foreach>
+   		 	<foreach collection="equipList" item="equip" separator="or" open="and">
+ 		 		<bind name="e" value="'%'+equip+'%'"/>
+ 		 		<!-- ZONE.zone_note like '%' || #{equip} || '%' -->
+	         	ZONE.zone_note like #{e}
+	      	</foreach>
+    	</where>
+    </select>
+    
+    
+    
+    
+    
+  
+    
+	
+	<!-- 건물정보 -->
+	
+	<select id="getRegNo" resultType="com.test.ur.app.dto.URA001Dto">
+		SELECT FROM ROOMINFO WHERE ROOM_REGISTERNO = #{regno}
+	</select>
+
+	<select id="getZoneInfo" resultType="com.test.ur.app.dto.URA001Dto">
+		SELECT FROM ROOMINFO WHERE ROOM_ZONEINFO = #{zoneinfo}
+	</select>
+	
+	<select id="getAreaInfo" resultType="com.test.ur.app.dto.URA001Dto">
+		SELECT FROM ROOMINFO WHERE ROOM_AREAINFO = #{areainfo}
+	</select>
+	
+	<select id="getFlowInfo" resultType="com.test.ur.app.dto.URA001Dto">
+		SELECT FROM ROOMINFO WHERE ROOM_FLOWAREA = #{flow}
+	</select>
+	
+	<select id="getStructure" resultType="com.test.ur.app.dto.URA001Dto">
+		SELECT FROM ROOMINFO WHERE ROOM_STRUCTURE = #{structure}
+	</select>
+	
+	<select id="getSikiking" resultType="com.test.ur.app.dto.URA001Dto">
+		SELECT FROM ROOMINFO WHERE ROOM_SIKIKING = #{sikiking}
+	</select>
+	
+	<select id="getRacing" resultType="com.test.ur.app.dto.URA001Dto">
+		SELECT FROM ROOMINFO WHERE ROOM_RACING = #{racing}
+	</select>
+	
+	<select id="getYaching" resultType="com.test.ur.app.dto.URA001Dto">
+		SELECT FROM ROOMINFO WHERE ROOM_YACHING = #{yaching}
+	</select>
+	
+	<select id="getNoOfFloor" resultType="com.test.ur.app.dto.URA001Dto">
+		SELECT FROM ROOMINFO WHERE ROOM_NOOGFLOORS = #{floor}
+	</select>
+	
+	<select id="getRoomArrange" resultType="com.test.ur.app.dto.URA001Dto">
+		SELECT FROM ROOMINFO WHERE ROOM_ROOMARRANGE = #{arrange}
+	</select>
+	
+	<select id="getimg360" resultType="com.test.ur.app.dto.URA001Dto">
+		SELECT FROM ROOMINFO WHERE ROOM_IMG360 = #{img360}
+	</select>
+	
+	<select id="getimg" resultType="com.test.ur.app.dto.URA001Dto">
+		SELECT FROM ROOMINFO WHERE ROOM_IMG = #{img}
+	</select>
+	
+	
+
+    <!-- 코드마스터 삽입 -->
+    <insert id="insertEntireRegionalCode" parameterType="java.util.List">
+    	INSERT INTO ENTIREREGIONALCODE VALUES (#{code}, #{name}) 
+    </insert>
+    
+    <insert id="insertAreaRegionalCode" parameterType="codeDto">
+    	INSERT INTO AREAREGIONALCODE VALUES (#{code}, #{name}, #{code1}) 
+    </insert>
+    
+    <insert id="insertStateRegionalCode" parameterType="codeDto">
+    	INSERT INTO STATEREGIONALCODE VALUES (#{code}, #{name}, #{code1}, #{code2}, #{code3}, #{code4}) 
+    </insert>
+    
+    <insert id="insertProgressCode" parameterType="codeDto">
+    	INSERT INTO PROGRESSCODE VALUES (#{code}, #{name}) 
+    </insert>
+    
+    <insert id="insertRoomCode" parameterType="codeDto">
+    	INSERT INTO ROOMCODE VALUES (#{code}, #{name}) 
+    </insert>
+    
+    <insert id="insertInternetCode" parameterType="codeDto">
+    	INSERT INTO INTERNETCODE VALUES (#{code}, #{name}) 
+    </insert>
+    
+    <insert id="insertBusinessCode" parameterType="codeDto">
+    	INSERT INTO BUSINESSCODE VALUES (#{code}, #{name}) 
+    </insert>
+    
+    <insert id="insertCategoryCode" parameterType="codeDto">
+    	INSERT INTO CATEGORYCODE VALUES (#{code}, #{name}) 
+    </insert>
+    
+    <insert id="insertNationalityCode" parameterType="codeDto">
+    	INSERT INTO NATIONALITYCODE VALUES (#{code}, #{name}) 
+    </insert>
+    
+    <insert id="insertEquipmentCode" parameterType="codeDto">
+    	INSERT INTO EQUIPMENTCODE VALUES (#{code}, #{name}) 
+    </insert>
+    
+    
+	<!-- 코드마스터 데이터 삭제 -->
+    <delete id="deleteEntireRegionalCode">
+    	DELETE FROM ENTIREREGIONALCODE
+    </delete>
+    
+    <delete id="deleteAreaRegionalCode">
+    	DELETE FROM AREAREGIONALCODE
+    </delete>
+    
+    <delete id="deleteStateregionalcode">
+    	DELETE FROM STATEREGIONALCODE
+    </delete>
+    
+    <delete id="deleteProgressCode">
+    	DELETE FROM PROGRESSCODE
+    </delete>
+    
+    <delete id="deleteRoomCode">
+    	DELETE FROM ROOMCODE
+    </delete>
+    
+    <delete id="deleteInternetCode">
+    	DELETE FROM INTERNETCODE
+    </delete>
+    
+    <delete id="deleteBusinessCode">
+    	DELETE FROM BUSINESSCODE
+    </delete>
+    
+    <delete id="deleteCategoryCode">
+    	DELETE FROM CATEGORYCODE
+    </delete>
+    
+    <delete id="deleteNationalityCode">
+    	DELETE FROM NATIONALITYCODE
+    </delete>
+    
+    <delete id="deleteEquipmentCode">
+    	DELETE FROM EQUIPMENTCODE
+    </delete>
+    
+</mapper>

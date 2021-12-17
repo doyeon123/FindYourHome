@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.test.ur.app.mapper.ljk_URC002Mapper">
+
+
+
+	<select id="get" resultType="com.test.ur.app.dto.ljk_URC002Dto">
+		select * from consulting where consulting_registerNo=#{consulting_registerno}
+	</select>
+
+
+
+</mapper>
+
+<!-- 여기서 mybatis 작성하면, dao mapper service serviceImpl 수정하고 controller의 service까지 -->
